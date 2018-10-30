@@ -11,26 +11,35 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "flatmap": "^0.0.3",
     "vue": "^2.5.17",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "ws": "^6.1.0"
   },
   "devDependencies": {
+    "@types/socket.io-client": "^1.4.32",
     "@vue/cli-plugin-babel": "^3.0.5",
     "@vue/cli-plugin-eslint": "^3.0.5",
     "@vue/cli-plugin-typescript": "^3.0.5",
     "@vue/cli-service": "^3.0.5",
     "@vue/eslint-config-standard": "^3.0.5",
     "@vue/eslint-config-typescript": "^3.0.5",
+    "bootstrap-vue": "^2.0.0-rc.11",
+    "chart.js": "^2.7.3",
     "electron": "^3.0.0",
+    "json2csv": "^4.2.1",
     "lint-staged": "^7.2.2",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "typescript": "^3.0.0",
+    "vue-chartjs": "^3.4.0",
     "vue-cli-plugin-electron-builder": "^1.0.0-rc.7",
-    "vue-template-compiler": "^2.5.17"
+    "vue-native-websocket": "^2.0.12",
+    "vue-template-compiler": "^2.5.17",
+    "vue-worker": "israelss/vue-worker#5/head"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

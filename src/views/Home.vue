@@ -1,18 +1,35 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+  <b-container class="h-40" fluid>
+    <b-row class="my-auto">
+      <b-col>
+        <h4 v-if="!thereIsData">Waiting for sensoors data...</h4>
+      </b-col>
+    </b-row>
+    <Sensor v-for="(value, key) in  sensorsData" v-bind:name="key"  v-bind:data="value" v-bind:key="key" />
+
+  </b-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
+import Sensor from '@/components/SensorLog.vue' // @ is an alias to /src
 
 @Component({
   components: {
-  HelloWorld,
+  Sensor
   },
   })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  get ipAddre () {
+    return this.$store.state.localIp
+  }
+
+  get sensorsData () {
+    return this.$store.state.sensors
+  }
+
+  get thereIsData () {
+    return this.$store.getters.hasSensors
+  }
+}
 </script>

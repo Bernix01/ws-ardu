@@ -1,29 +1,106 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <b-navbar toggleable="md" type="dark" variant="primary">
+      <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+      <b-navbar-brand href="#">WS Ardu ({{ipAddre}}:9300)</b-navbar-brand>
+      <b-collapse is-nav id="nav_collapse">
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item v-on:click="saveFile">Export data</b-nav-item>
+          <b-nav-item v-on:click="clear">Clear data</b-nav-item>
+          <b-nav-item v-on:click="close">Close</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
     <router-view/>
   </div>
 </template>
 
 <style lang="scss">
+html,body, #app {
+  height: 100%;
+}
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import '@/assets/ws-ardu.epic.css'
+import { remote } from 'electron'
+const Json2csvParser = require('json2csv').Parser
+
+@Component({
+  components: {}
+  })
+export default class App extends Vue {
+  get ipAddre () {
+    return this.$store.state.localIp ? this.$store.state.localIp[0] : ''
+  }
+
+  myWorker = null
+
+  created () {
+    this.myWorker = this.$MrWorker.create([
+      { message: 'generateCsv', func: this.makeCsvReadyData }
+    ])
+  }
+
+  clear () {
+    this.$store.commit('CLEAR_SENSORS_DATA')
+  }
+
+  close () {
+    remote.getCurrentWindow().close()
+  }
+
+  saveFile () {
+    console.log('saving?')
+    const savePath = remote.dialog.showSaveDialog({
+      title: 'Export data',
+      message: ':v'
+    })
+    const data = this.$store.state.sensors
+    const ks = Object.keys(data)
+    const theParser = new Json2csvParser({ ks })
+    console.log(theParser)
+    this.myWorker.postMessage('generateCsv', [data, theParser]).then((csvReadyData:any[]) => {
+      const csv = theParser.parse(csvReadyData)
+      const fs = require('fs')
+      console.log(savePath)
+      try {
+        fs.writeFileSync(savePath, csv, 'utf-8')
+        console.log('done!')
+      } catch (e) {
+        alert('Failed to save the file !')
+      }
+    }).catch(console.error)
+  }
+
+  makeCsvReadyData = (data: {string:number[]}) => {
+    const csvReadyData = []
+    let notDone = true
+    let i = 0
+    while (notDone) {
+      let mRes: {string: number} = {}
+      let thisIsIt = 0
+      for (const k in data) {
+        const v = data[k]
+        mRes[k] = v.length > i ? v[i] : -1
+        thisIsIt = v.length > i ? thisIsIt + 1 : thisIsIt
+      }
+      i = i + 1
+      notDone = thisIsIt > 1
+      if (notDone) {
+        csvReadyData.push(mRes)
+      }
+    }
+    console.log(csvReadyData)
+    return csvReadyData
+  }
+}
+</script>
