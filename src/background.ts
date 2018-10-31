@@ -5,17 +5,21 @@ import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
-import { wkk } from './modules/sockett'
+import LocalWSServer from './modules/sockett'
+
+require('electron-debug')({
+  enabled:true
+});
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null
-
+let localWss!: LocalWSServer
 // Standard scheme must be registered before the app is ready
 protocol.registerStandardSchemes(['app'], { secure: true })
-function createWindow() {
+function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({ width: 1200, height: 800, frame: false })
 
@@ -30,6 +34,7 @@ function createWindow() {
   }
 
   win.on('closed', () => {
+    localWss.close()
     win = null
   })
 }
@@ -60,7 +65,8 @@ app.on('ready', async () => {
     await installVueDevtools()
   }
   createWindow()
-  wkk.start()
+  localWss = new LocalWSServer()
+  localWss.start()
 })
 
 // Exit cleanly on request from parent process in development mode.

@@ -1,5 +1,8 @@
 <template>
   <b-container class="h-40" fluid>
+    {{thereIsData}}
+    <br>
+    {{sensorsData}}
     <b-row class="my-auto">
       <b-col>
         <h4 v-if="!thereIsData">Waiting for sensoors data...</h4>

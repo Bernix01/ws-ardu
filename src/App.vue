@@ -2,7 +2,7 @@
   <div id="app">
     <b-navbar toggleable="md" type="dark" variant="primary">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-navbar-brand href="#">WS Ardu ({{ipAddre}}:9300)</b-navbar-brand>
+      <b-navbar-brand href="#">WS Ardu ({{ipAddre}}:9300) - {{nc ? 'Ardu connected' : 'Ardu not connected' }}</b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav class="ml-auto">
           <b-nav-item v-on:click="saveFile">Export data</b-nav-item>
@@ -42,10 +42,14 @@ export default class App extends Vue {
     return this.$store.state.localIp ? this.$store.state.localIp[0] : ''
   }
 
-  myWorker = null
+  get nc () {
+    return this.$store.state.nc - 1 === 1
+  }
+
+  myWorker!:any
 
   created () {
-    this.myWorker = this.$MrWorker.create([
+    this.myWorker = this.$worker.create([
       { message: 'generateCsv', func: this.makeCsvReadyData }
     ])
   }
@@ -69,27 +73,29 @@ export default class App extends Vue {
     const theParser = new Json2csvParser({ ks })
     console.log(theParser)
     this.myWorker.postMessage('generateCsv', [data, theParser]).then((csvReadyData:any[]) => {
-      const csv = theParser.parse(csvReadyData)
-      const fs = require('fs')
-      console.log(savePath)
-      try {
-        fs.writeFileSync(savePath, csv, 'utf-8')
-        console.log('done!')
-      } catch (e) {
-        alert('Failed to save the file !')
+      if (csvReadyData.length > 0) {
+        const csv = theParser.parse(csvReadyData)
+        const fs = require('fs')
+        console.log(savePath)
+        try {
+          fs.writeFileSync(savePath, csv, 'utf-8')
+          console.log('done!')
+        } catch (e) {
+          alert('Failed to save the file !')
+        }
       }
     }).catch(console.error)
   }
 
   makeCsvReadyData = (data: {string:number[]}) => {
-    const csvReadyData = []
+    const csvReadyData: {}[] = []
     let notDone = true
     let i = 0
     while (notDone) {
-      let mRes: {string: number} = {}
+      let mRes= {}
       let thisIsIt = 0
       for (const k in data) {
-        const v = data[k]
+        const v = data[k] as number[]
         mRes[k] = v.length > i ? v[i] : -1
         thisIsIt = v.length > i ? thisIsIt + 1 : thisIsIt
       }

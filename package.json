@@ -11,16 +11,22 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@sentry/browser": "^4.2.3",
+    "@sentry/electron": "0.13.0",
+    "electron-debug": "^2.0.0",
+    "electron-unhandled": "^1.1.0",
     "flatmap": "^0.0.3",
     "vue": "^2.5.17",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
+    "vue-worker": "Bernix01/vue-worker",
     "vuex": "^3.0.1",
     "ws": "^6.1.0"
   },
   "devDependencies": {
     "@types/socket.io-client": "^1.4.32",
+    "@types/ws": "^6.0.1",
     "@vue/cli-plugin-babel": "^3.0.5",
     "@vue/cli-plugin-eslint": "^3.0.5",
     "@vue/cli-plugin-typescript": "^3.0.5",
@@ -38,8 +44,7 @@
     "vue-chartjs": "^3.4.0",
     "vue-cli-plugin-electron-builder": "^1.0.0-rc.7",
     "vue-native-websocket": "^2.0.12",
-    "vue-template-compiler": "^2.5.17",
-    "vue-worker": "israelss/vue-worker#5/head"
+    "vue-template-compiler": "^2.5.17"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

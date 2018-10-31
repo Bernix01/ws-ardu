@@ -24,10 +24,10 @@ import LineChart from './SensorChart.js'
   })
 export default class Sensor extends Vue {
   @Prop({ default: '' })
-  name: string
+  name!: string
 
   @Prop({ default: [] })
-  data: number[]
+  data!: number[]
 
   get last () {
     return this.data.length > 0 ? this.data[this.data.length -1].toString() : '0'

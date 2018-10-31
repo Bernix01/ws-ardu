@@ -10,12 +10,13 @@ export default new Vuex.Store({
       message: {},
       reconnectError: false
     },
-    localIp: [],
+    localIp: '',
     sensors: {},
-    dataWindowSize: 50
+    dataWindowSize: 50,
+    nc: 0
   },
   getters: {
-    hasSensors: (state,getters) => {
+    hasSensors: (state, getters) => {
       return getters.sensorsCount > 0
     },
     sensorsCount: (state, getters) => {
@@ -31,22 +32,24 @@ export default new Vuex.Store({
       state.socket.isConnected = false
     },
     SOCKET_ONERROR (state, event) {
-      console.error(state, event)
+      // console.error(state, event)
     },
-    SOCKET_ONMESSAGE (state, message: {t:string, p: string[] | number}) {
-      if (message.t ==='ipAddr') {
-        state.localIp.push(...(message.p as string[]))
+    SOCKET_ONMESSAGE (state, message: { t: string, p: string | number }) {
+      if (message.t === 'ipAddr') {
+        state.localIp = message.p as string
+      } else if (message.t === 'nc') {
+        state.nc = message.p as number
       } else {
-        if (message.t in state.sensors ) {
+        if (message.t in state.sensors) {
           state.sensors[message.t].push(message.p as number)
+          Vue.extend()
         } else {
           Vue.set(state.sensors, message.t, [message.p as number])
         }
       }
-      state.socket.message = { ...state.socket.message, ...message }
     },
     SOCKET_RECONNECT (state, count) {
-      console.info(state, count)
+      // console.info(state, count)
     },
     SOCKET_RECONNECT_ERROR (state) {
       state.socket.reconnectError = true

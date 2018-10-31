@@ -1,6 +1,7 @@
+
 declare module '*.vue' {
   import Vue from 'vue'
   export default Vue
 }
 declare module 'vue-native-websocket';
-declare module 'vue-worker';
+declare module 'SensorChart.js';
