@@ -17,16 +17,12 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "@sentry/browser": "^4.2.3",
-    "@sentry/electron": "0.13.0",
-    "electron-debug": "^2.0.0",
-    "electron-unhandled": "^1.1.0",
     "flatmap": "^0.0.3",
     "vue": "^2.5.17",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
-    "vue-worker": "Bernix01/vue-worker",
+    "vue-worker": "^1.2.1",
     "vuex": "^3.0.1",
     "ws": "^6.1.0"
   },
