@@ -9,11 +9,10 @@
   "description": "Websockets Sensors logger",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build -m --win portable --x64 -p onTagOrDraft",
+    "electron:build": "yarn clean && vue-cli-service electron:build -m --win portable --x64 -p onTagOrDraft",
     "electron:serve": "vue-cli-service electron:serve",
+    "clean": "rm -rf dist_electron",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
