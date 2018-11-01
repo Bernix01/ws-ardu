@@ -1,6 +1,6 @@
 {
   "name": "ws-arduino-logger",
-  "version": "0.1.0",
+  "version": "0.1.0-beta",
   "author": {
     "email": "gbernal096@gmail.com",
     "name": "Bernix01",
@@ -12,8 +12,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build -mw --x64",
-    "electron:build:p": "vue-cli-service electron:build -mw --x64 -p",
+    "electron:build": "vue-cli-service electron:build -m --win portable --x64 -p onTagOrDraft",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps"
   },

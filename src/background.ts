@@ -7,22 +7,20 @@ import {
 } from 'vue-cli-plugin-electron-builder/lib'
 import LocalWSServer from './modules/sockett'
 
-require('electron-debug')({
-  enabled:true
-});
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null
-let localWss!: LocalWSServer
+let localWss: LocalWSServer | null
 // Standard scheme must be registered before the app is ready
 protocol.registerStandardSchemes(['app'], { secure: true })
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({ width: 1200, height: 800, frame: false })
 
+  localWss = new LocalWSServer()
   if (isDevelopment) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
@@ -32,9 +30,12 @@ function createWindow () {
     // Load the index.html when not in development
     win.loadFile('index.html')
   }
+  if (localWss.closed) {
+    localWss.start()
+  }
 
   win.on('closed', () => {
-    localWss.close()
+    localWss = null
     win = null
   })
 }
@@ -43,6 +44,9 @@ function createWindow () {
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  if (localWss !== null) {
+    localWss.close()
+  }
   if (process.platform !== 'darwin') {
     app.quit()
   }
@@ -65,8 +69,6 @@ app.on('ready', async () => {
     await installVueDevtools()
   }
   createWindow()
-  localWss = new LocalWSServer()
-  localWss.start()
 })
 
 // Exit cleanly on request from parent process in development mode.
