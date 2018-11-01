@@ -27,7 +27,7 @@ Starts a `simple-websocket-server` on port `9300` and logs data to app. You can 
 
 You may use any client device that has a Wifi antenna and is websocket enabled. Here is an example with `Arduino`:
 
-```arduino
+```c
 #include <ArduinoHttpClient.h>
 #include <WiFi101.h>
 
