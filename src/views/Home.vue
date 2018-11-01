@@ -1,11 +1,9 @@
 <template>
   <b-container class="h-40" fluid>
-    {{thereIsData}}
-    <br>
-    {{sensorsData}}
     <b-row class="my-auto">
       <b-col>
-        <h4 v-if="!thereIsData">Waiting for sensoors data...</h4>
+        <br>
+        <h4 v-if="!thereIsData" class="text-center">Waiting for sensoors data...</h4>
       </b-col>
     </b-row>
     <Sensor v-for="(value, key) in  sensorsData" v-bind:name="key"  v-bind:data="value" v-bind:key="key" />

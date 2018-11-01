@@ -1,12 +1,19 @@
 {
   "name": "ws-arduino-logger",
   "version": "0.1.0",
+  "author": {
+    "email": "gbernal096@gmail.com",
+    "name": "Bernix01",
+    "url": "https://github.com/bernix01/"
+  },
+  "description": "Websockets Sensors logger",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build -mw --x64",
+    "electron:build:p": "vue-cli-service electron:build -mw --x64 -p",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps"
   },

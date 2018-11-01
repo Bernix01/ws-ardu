@@ -11,7 +11,7 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <router-view/>
+    <Home />
   </div>
 </template>
 
@@ -31,11 +31,14 @@ import { Component, Vue } from 'vue-property-decorator'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@/assets/ws-ardu.epic.css'
+import Home from '@/views/Home.vue'
 import { remote } from 'electron'
 const Json2csvParser = require('json2csv').Parser
 
 @Component({
-  components: {}
+  components: {
+  Home
+  }
   })
 export default class App extends Vue {
   get ipAddre () {
