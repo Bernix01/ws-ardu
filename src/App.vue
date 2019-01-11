@@ -106,7 +106,7 @@ export default class App extends Vue {
       csv += csvv
     }
     this.csvStr = csv
-    this.$refs.myModalRef.show()
+    ;(this.$refs.myModalRef as any).show()
 
     // console.log('saving?')
     // const savePath = remote.dialog.showSaveDialog({

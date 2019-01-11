@@ -55,7 +55,7 @@ export default new Vuex.Store({
       state.socket.reconnectError = true
     },
     CLEAR_SENSORS_DATA(state) {
-      state.sensors = {} as 
+      state.sensors = {}
     }
   },
   actions: {
