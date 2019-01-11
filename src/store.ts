@@ -11,10 +11,7 @@ export default new Vuex.Store({
       reconnectError: false
     },
     localIp: '',
-    sensors: {
-      sensora: [{ value: 12 }, { value: 12 }, { value: 12 }],
-      sensorb: [{ value: 12 }, { value: 12 }, { value: 12 }]
-    },
+    sensors: {},
     dataWindowSize: 50,
     nc: 0
   },
@@ -58,7 +55,7 @@ export default new Vuex.Store({
       state.socket.reconnectError = true
     },
     CLEAR_SENSORS_DATA(state) {
-      state.sensors = {}
+      state.sensors = {} as 
     }
   },
   actions: {

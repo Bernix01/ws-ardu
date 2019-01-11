@@ -39,26 +39,26 @@ function createWindow() {
     win = null
   })
 }
-const Json2csvParser = require('json2csv').Parser
-ipcMain.on('exportData', (event, args) => {
-  console.log('asdasd')
-  win.webContents.send('status', 'hola')
-  const { data, savePath } = args
-  const fields = ['value']
-  const opts = { fields }
-  const csvParser = new Json2csvParser(opts)
-  for (const k in data) {
-    console.log('saving...', k, data[k])
-    const csv = csvParser.parse(data[k])
-    console.log(savePath)
-    try {
-      fs.writeFileSync(savePath + '_' + k + '.csv', csv, 'utf-8')
-      console.log('done!')
-    } catch (e) {
-      alert('Failed to save the file !')
-    }
-  }
-})
+// const Json2csvParser = require('json2csv').Parser
+// ipcMain.on('exportData', (event, args) => {
+//   console.log('asdasd')
+//   win.webContents.send('status', 'hola')
+//   const { data, savePath } = args
+//   const fields = ['value']
+//   const opts = { fields }
+//   const csvParser = new Json2csvParser(opts)
+//   for (const k in data) {
+//     console.log('saving...', k, data[k])
+//     const csv = csvParser.parse(data[k])
+//     console.log(savePath)
+//     try {
+//       fs.writeFileSync(savePath + '_' + k + '.csv', csv, 'utf-8')
+//       console.log('done!')
+//     } catch (e) {
+//       alert('Failed to save the file !')
+//     }
+//   }
+// })
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
