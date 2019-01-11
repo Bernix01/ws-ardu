@@ -12,5 +12,24 @@ module.exports = {
         }
       }
     }
-  }
+  },
+
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.worker\.js$/,
+          use: { loader: 'worker-loader' }
+        }
+      ]
+    }
+  },
+
+  baseUrl: undefined,
+  outputDir: 'public',
+  assetsDir: 'assets',
+  runtimeCompiler: undefined,
+  productionSourceMap: undefined,
+  parallel: undefined,
+  css: undefined
 }

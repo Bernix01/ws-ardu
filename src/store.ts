@@ -11,7 +11,10 @@ export default new Vuex.Store({
       reconnectError: false
     },
     localIp: '',
-    sensors: {},
+    sensors: {
+      sensora: [{ value: 12 }, { value: 12 }, { value: 12 }],
+      sensorb: [{ value: 12 }, { value: 12 }, { value: 12 }]
+    },
     dataWindowSize: 50,
     nc: 0
   },
@@ -24,17 +27,17 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SOCKET_ONOPEN (state, event) {
+    SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget
       state.socket.isConnected = true
     },
-    SOCKET_ONCLOSE (state, event) {
+    SOCKET_ONCLOSE(state, event) {
       state.socket.isConnected = false
     },
-    SOCKET_ONERROR (state, event) {
+    SOCKET_ONERROR(state, event) {
       // console.error(state, event)
     },
-    SOCKET_ONMESSAGE (state, message: { t: string, p: string | number }) {
+    SOCKET_ONMESSAGE(state, message: { t: string; p: string | number }) {
       if (message.t === 'ipAddr') {
         state.localIp = message.p as string
       } else if (message.t === 'nc') {
@@ -48,18 +51,18 @@ export default new Vuex.Store({
         }
       }
     },
-    SOCKET_RECONNECT (state, count) {
+    SOCKET_RECONNECT(state, count) {
       // console.info(state, count)
     },
-    SOCKET_RECONNECT_ERROR (state) {
+    SOCKET_RECONNECT_ERROR(state) {
       state.socket.reconnectError = true
     },
-    CLEAR_SENSORS_DATA (state) {
+    CLEAR_SENSORS_DATA(state) {
       state.sensors = {}
     }
   },
   actions: {
-    sendMessage: function (context, message) {
+    sendMessage: function(context, message) {
       Vue.prototype.$socket.send(message)
     }
   }

@@ -1,12 +1,12 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
 import LocalWSServer from './modules/sockett'
-
+import * as fs from 'fs'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -16,7 +16,7 @@ let win: BrowserWindow | null
 let localWss: LocalWSServer | null
 // Standard scheme must be registered before the app is ready
 protocol.registerStandardSchemes(['app'], { secure: true })
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({ width: 1200, height: 800, frame: false })
 
@@ -39,6 +39,26 @@ function createWindow () {
     win = null
   })
 }
+const Json2csvParser = require('json2csv').Parser
+ipcMain.on('exportData', (event, args) => {
+  console.log('asdasd')
+  win.webContents.send('status', 'hola')
+  const { data, savePath } = args
+  const fields = ['value']
+  const opts = { fields }
+  const csvParser = new Json2csvParser(opts)
+  for (const k in data) {
+    console.log('saving...', k, data[k])
+    const csv = csvParser.parse(data[k])
+    console.log(savePath)
+    try {
+      fs.writeFileSync(savePath + '_' + k + '.csv', csv, 'utf-8')
+      console.log('done!')
+    } catch (e) {
+      alert('Failed to save the file !')
+    }
+  }
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {

@@ -15,6 +15,7 @@ export default class LocalWSServer {
     this.wss.on('connection', (ws) => {
       this.numClients = this.wss.clients.size
       const _wss = this.wss
+      console.log("Connected: " + this.numClients);
       ws.on('message', (message) => {
         this.broadcast(_wss, ws, message);
       })
