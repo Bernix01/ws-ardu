@@ -5,11 +5,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    socket: {
-      isConnected: false,
-      message: {},
-      reconnectError: false
-    },
     localIp: '',
     sensors: {},
     dataWindowSize: 50,
@@ -24,43 +19,23 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SOCKET_ONOPEN(state, event) {
-      Vue.prototype.$socket = event.currentTarget
-      state.socket.isConnected = true
+    SET_IP(state, ip) {
+      state.localIp = ip
     },
-    SOCKET_ONCLOSE(state, event) {
-      state.socket.isConnected = false
+    SET_CONNECTED(state, isConnected) {
+      state.nc = isConnected
     },
-    SOCKET_ONERROR(state, event) {
-      // console.error(state, event)
-    },
-    SOCKET_ONMESSAGE(state, message: { t: string; p: string | number }) {
-      if (message.t === 'ipAddr') {
-        state.localIp = message.p as string
-      } else if (message.t === 'nc') {
-        state.nc = message.p as number
+    SET_DATA(state, data: { t: string; p: { value: string } }) {
+      if (data.t in state.sensors) {
+        state.sensors[data.t].push(data.p)
       } else {
-        if (message.t in state.sensors) {
-          state.sensors[message.t].push(message.p as number)
-          Vue.extend()
-        } else {
-          Vue.set(state.sensors, message.t, [message.p as number])
-        }
+        Vue.set(state.sensors, data.t, [data.p])
       }
-    },
-    SOCKET_RECONNECT(state, count) {
-      // console.info(state, count)
-    },
-    SOCKET_RECONNECT_ERROR(state) {
-      state.socket.reconnectError = true
     },
     CLEAR_SENSORS_DATA(state) {
       state.sensors = {}
     }
   },
   actions: {
-    sendMessage: function(context, message) {
-      Vue.prototype.$socket.send(message)
-    }
   }
 })

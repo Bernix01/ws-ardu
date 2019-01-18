@@ -14,13 +14,14 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null
 let localWss: LocalWSServer | null
+localWss = new LocalWSServer()
 // Standard scheme must be registered before the app is ready
 protocol.registerStandardSchemes(['app'], { secure: true })
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({ width: 1200, height: 800, frame: false })
 
-  localWss = new LocalWSServer()
+  
   if (isDevelopment) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
@@ -30,15 +31,32 @@ function createWindow() {
     // Load the index.html when not in development
     win.loadFile('index.html')
   }
-  if (localWss.closed) {
-    localWss.start()
-  }
+  
 
   win.on('closed', () => {
     localWss = null
     win = null
   })
 }
+
+ipcMain.on('resetWS',(event)=>{
+  console.log('resseting ws server')
+  if(localWss){
+    localWss.close((err)=>{
+      if (err){
+        console.error('error closing!')
+        console.error(err)
+      }
+      localWss!.start(win!)
+    })
+  }
+})
+
+ipcMain.on('ready',(event)=>{
+  if (localWss && localWss.closed && win) {
+    localWss.start(win)
+  }
+})
 // const Json2csvParser = require('json2csv').Parser
 // ipcMain.on('exportData', (event, args) => {
 //   console.log('asdasd')

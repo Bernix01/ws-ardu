@@ -2,10 +2,10 @@
   <div id="app">
     <b-navbar toggleable="md" type="dark" variant="primary" class="drag">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-navbar-brand href="#"
-        >WS Ardu ({{ ipAddre }}:9300) -
-        {{ nc ? 'Ardu connected' : 'Ardu not connected' }}</b-navbar-brand
-      >
+      <b-navbar-brand href="#" v-on:click="resetWs">
+        WS Ardu ({{ ipAddre }}:9300) -
+        {{ nc ? 'Ardu connected' : 'Ardu not connected' }}
+      </b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
         <b-navbar-nav class="ml-auto">
           <b-nav-item v-on:click="saveFile" class="no-drag"
@@ -69,13 +69,29 @@ export default class App extends Vue {
   }
 
   get nc() {
-    return this.$store.state.nc - 1 === 1
+    return this.$store.state.nc
   }
 
+  resetWs() {
+    ipcRenderer.send('resetWS')
+  }
   created() {
-    ipcRenderer.on('status', (event, args) => {
-      console.log(event)
-      console.log(args)
+    ipcRenderer.send('ready')
+    ipcRenderer.on('connected', (event, isConnected) => {
+      console.log('data')
+      this.$store.commit('SET_CONNECTED', isConnected)
+    })
+
+    ipcRenderer.on('ip', (event, ip) => {
+      console.log('data')
+
+      this.$store.commit('SET_IP', ip)
+    })
+
+    ipcRenderer.on('sensorData', (event, data) => {
+      console.log('data')
+
+      this.$store.commit('SET_DATA', data)
     })
   }
 
@@ -89,7 +105,7 @@ export default class App extends Vue {
 
   saveFile() {
     let csv = ''
-    const fields = ['value']
+    const fields = ['value', 'time']
     const opts = { fields }
 
     const data = this.$store.state.sensors
